@@ -92,6 +92,7 @@ jobs:
 
       - name: Publish to npm
         run: |
+          mkdir -p dist
           cp artifacts/dist/blamewise.js dist/blamewise.js
           cp artifacts/package.json package.json
           npm publish --provenance --access public

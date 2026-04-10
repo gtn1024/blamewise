@@ -6,6 +6,10 @@
   "bin": {
     "blamewise": "dist/blamewise.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gtn1024/blamewise"
+  },
   "files": [
     "dist/blamewise.js"
   ],

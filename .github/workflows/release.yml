@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     tags:
-      - "v*"
+      - 'v*'
 
 jobs:
   build-binaries:
@@ -13,23 +13,23 @@ jobs:
           - target: bun-linux-x64
             os: ubuntu-latest
             artifact: blamewise-linux-x64
-            ext: ""
+            ext: ''
           - target: bun-linux-arm64
             os: ubuntu-latest
             artifact: blamewise-linux-arm64
-            ext: ""
+            ext: ''
           - target: bun-darwin-x64
             os: macos-latest
             artifact: blamewise-darwin-x64
-            ext: ""
+            ext: ''
           - target: bun-darwin-arm64
             os: macos-latest
             artifact: blamewise-darwin-arm64
-            ext: ""
+            ext: ''
           - target: bun-windows-x64
             os: ubuntu-latest
             artifact: blamewise-windows-x64
-            ext: ".exe"
+            ext: .exe
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4

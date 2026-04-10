@@ -4,9 +4,14 @@
   "version": "0.1.0",
   "module": "src/cli.ts",
   "bin": {
-    "blamewise": "src/cli.ts"
+    "blamewise": "dist/blamewise.js"
   },
+  "files": [
+    "dist/blamewise.js"
+  ],
   "scripts": {
+    "build": "bun build src/cli.ts --outfile dist/blamewise.js --target node && sed -i '' '1s|.*|#!/usr/bin/env node|' dist/blamewise.js",
+    "build:binary": "bun build --compile src/cli.ts --outfile dist/blamewise",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },

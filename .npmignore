@@ -1,0 +1,7 @@
+src/
+test/
+.github/
+.eslint*
+tsconfig.json
+bun.lock
+CLAUDE.md

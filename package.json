@@ -1,12 +1,20 @@
 {
   "name": "blamewise",
-  "module": "index.ts",
+  "version": "0.1.0",
+  "module": "src/cli.ts",
   "type": "module",
-  "private": true,
+  "bin": {
+    "blamewise": "src/cli.ts"
+  },
   "devDependencies": {
     "@types/bun": "latest"
   },
   "peerDependencies": {
     "typescript": "^5"
+  },
+  "dependencies": {
+    "cac": "^7.0.0",
+    "cli-table3": "^0.6.5",
+    "picocolors": "^1.1.1"
   }
 }

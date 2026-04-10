@@ -7,6 +7,7 @@
       "dependencies": {
         "cac": "^7.0.0",
         "cli-table3": "^0.6.5",
+        "consola": "^3.4.2",
         "picocolors": "^1.1.1",
       },
       "devDependencies": {
@@ -186,6 +187,8 @@
     "comment-parser": ["comment-parser@1.4.6", "https://registry.npmmirror.com/comment-parser/-/comment-parser-1.4.6.tgz", {}, "sha512-ObxuY6vnbWTN6Od72xfwN9DbzC7Y2vv8u1Soi9ahRKL37gb6y1qk6/dgjs+3JWuXJHWvsg3BXIwzd/rkmAwavg=="],
 
     "confbox": ["confbox@0.2.4", "https://registry.npmmirror.com/confbox/-/confbox-0.2.4.tgz", {}, "sha512-ysOGlgTFbN2/Y6Cg3Iye8YKulHw+R2fNXHrgSmXISQdMnomY6eNDprVdW9R5xBguEqI954+S6709UyiO7B+6OQ=="],
+
+    "consola": ["consola@3.4.2", "https://registry.npmmirror.com/consola/-/consola-3.4.2.tgz", {}, "sha512-5IKcdX0nnYavi6G7TtOhwkYzyjfJlatbjMjuLSfE2kYT5pMDOilZ4OvMhi637CcDICTmz3wARPoyhqyX1Y+XvA=="],
 
     "core-js-compat": ["core-js-compat@3.49.0", "https://registry.npmmirror.com/core-js-compat/-/core-js-compat-3.49.0.tgz", { "dependencies": { "browserslist": "^4.28.1" } }, "sha512-VQXt1jr9cBz03b331DFDCCP90b3fanciLkgiOoy8SBHy06gNf+vQ1A3WFLqG7I8TipYIKeYK9wxd0tUrvHcOZA=="],
 

@@ -1,3 +1,4 @@
+import { consola } from 'consola'
 import { parseGitLog } from '../git/log'
 import { git } from '../git/run'
 import { renderWhy } from '../render'
@@ -15,10 +16,10 @@ export async function why(filePath: string, options?: { num?: number }) {
   )
 
   if (!raw.trim()) {
-    console.log(`No commits found for ${filePath}`)
+    consola.log(`No commits found for ${filePath}`)
     return
   }
 
   const entries = parseGitLog(raw)
-  console.log(renderWhy(filePath, entries))
+  consola.log(renderWhy(filePath, entries))
 }

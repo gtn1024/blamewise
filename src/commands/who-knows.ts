@@ -1,3 +1,4 @@
+import { consola } from 'consola'
 import { parseBlamePorcelain } from '../git/blame'
 import { git } from '../git/run'
 import { renderWhoKnows } from '../render'
@@ -44,5 +45,5 @@ export async function whoKnows(filePath: string, options?: { num?: number }) {
   }
 
   const stats = computeScores(byAuthor, commitCounts).slice(0, num)
-  console.log(renderWhoKnows(filePath, lines.length, stats))
+  consola.log(renderWhoKnows(filePath, lines.length, stats))
 }

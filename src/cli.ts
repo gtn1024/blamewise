@@ -1,5 +1,6 @@
 #!/usr/bin/env bun
 import { cac } from 'cac'
+import consola from 'consola'
 import { whoKnows } from './commands/who-knows'
 import { why } from './commands/why'
 
@@ -10,7 +11,7 @@ cli.command('who-knows <path>', 'Rank authors by expertise on a file').option('-
     await whoKnows(path, { num: Number.parseInt(String(options.num ?? '10'), 10) })
   }
   catch (e: any) {
-    console.error(`Error: ${e.message}`)
+    consola.error(e)
     process.exit(1)
   }
 })
@@ -20,7 +21,7 @@ cli.command('why <path>', 'Show recent commits with reasons for changes').option
     await why(path, { num: Number.parseInt(String(options.num ?? '5'), 10) })
   }
   catch (e: any) {
-    console.error(`Error: ${e.message}`)
+    consola.error(e)
     process.exit(1)
   }
 })

@@ -2,13 +2,13 @@
   "name": "blamewise",
   "type": "module",
   "version": "0.1.4",
-  "module": "src/cli.ts",
-  "bin": {
-    "blamewise": "dist/blamewise.js"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/gtn1024/blamewise"
+  },
+  "module": "src/cli.ts",
+  "bin": {
+    "blamewise": "dist/blamewise.js"
   },
   "files": [
     "dist/blamewise.js"

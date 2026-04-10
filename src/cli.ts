@@ -28,4 +28,8 @@ cli.command('why <path>', 'Show recent commits with reasons for changes').option
 
 cli.help()
 cli.version('0.1.0')
+
 cli.parse()
+if (!cli.args.length && !cli.matchedCommand) {
+  cli.outputHelp()
+}

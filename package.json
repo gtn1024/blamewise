@@ -1,13 +1,14 @@
 {
   "name": "blamewise",
+  "type": "module",
   "version": "0.1.0",
   "module": "src/cli.ts",
-  "type": "module",
   "bin": {
     "blamewise": "src/cli.ts"
   },
-  "devDependencies": {
-    "@types/bun": "latest"
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "peerDependencies": {
     "typescript": "^5"
@@ -16,5 +17,11 @@
     "cac": "^7.0.0",
     "cli-table3": "^0.6.5",
     "picocolors": "^1.1.1"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^8.1.1",
+    "@types/bun": "latest",
+    "eslint": "^10.2.0",
+    "jiti": "^2.6.1"
   }
 }

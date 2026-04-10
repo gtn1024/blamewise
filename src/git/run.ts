@@ -1,6 +1,11 @@
+import { execFile } from 'node:child_process'
+import { promisify } from 'node:util'
+
+const execFileAsync = promisify(execFile)
+
 export async function git(...args: string[]): Promise<string> {
-  const result = await Bun.$`git ${args}`.quiet()
-  return result.text()
+  const { stdout } = await execFileAsync('git', args)
+  return stdout
 }
 
 export async function gitLines(...args: string[]): Promise<string[]> {

@@ -46,7 +46,7 @@ cli.command('churn <path>', 'Show files with highest change frequency')
   })
 
 cli.help()
-cli.version('0.1.0')
+cli.version('0.2.0')
 
 cli.parse()
 if (!cli.args.length && !cli.matchedCommand) {

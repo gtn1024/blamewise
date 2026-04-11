@@ -1,5 +1,6 @@
 import type { ChurnResult } from '../src/commands/churn'
 import type { OnboardingResult } from '../src/commands/onboarding'
+import type { ReviewResult } from '../src/commands/review'
 import type { WhoKnowsResult } from '../src/commands/who-knows'
 import type { WhyResult } from '../src/commands/why'
 import { describe, expect, test } from 'bun:test'
@@ -134,5 +135,78 @@ describe('OnboardingResult JSON serialization', () => {
     const parsed = validateJsonRoundTrip(result)
     expect(parsed.moduleOwners).toHaveLength(0)
     expect(parsed.highChurnFiles).toHaveLength(0)
+  })
+})
+
+describe('ReviewResult JSON serialization', () => {
+  test('serializes complete result', () => {
+    const result: ReviewResult = {
+      files: ['src/cli.ts', 'src/render.ts'],
+      totalFiles: 2,
+      skippedFiles: [],
+      inactiveThreshold: '6 months ago',
+      filteredCount: 1,
+      reviewers: [
+        {
+          name: 'Alice',
+          email: 'alice@ex.com',
+          score: 0.87,
+          totalLines: 245,
+          totalCommits: 18,
+          lastActive: 1712793600,
+          filesExpertIn: 2,
+          fileDetails: [
+            { filePath: 'src/cli.ts', score: 0.92, lines: 130, commits: 10 },
+            { filePath: 'src/render.ts', score: 0.78, lines: 115, commits: 8 },
+          ],
+        },
+      ],
+    }
+    const parsed = validateJsonRoundTrip(result)
+    expect(parsed.files).toHaveLength(2)
+    expect(parsed.reviewers).toHaveLength(1)
+    expect(parsed.reviewers[0].filesExpertIn).toBe(2)
+    expect(parsed.reviewers[0].fileDetails).toHaveLength(2)
+    expect(parsed.filteredCount).toBe(1)
+  })
+
+  test('serializes with skipped files', () => {
+    const result: ReviewResult = {
+      files: ['src/a.ts', 'new-file.ts'],
+      totalFiles: 2,
+      skippedFiles: ['new-file.ts'],
+      inactiveThreshold: '6 months ago',
+      filteredCount: 0,
+      reviewers: [
+        {
+          name: 'Alice',
+          email: 'alice@ex.com',
+          score: 1,
+          totalLines: 50,
+          totalCommits: 5,
+          lastActive: 1712793600,
+          filesExpertIn: 1,
+          fileDetails: [
+            { filePath: 'src/a.ts', score: 1, lines: 50, commits: 5 },
+          ],
+        },
+      ],
+    }
+    const parsed = validateJsonRoundTrip(result)
+    expect(parsed.skippedFiles).toHaveLength(1)
+    expect(parsed.skippedFiles[0]).toBe('new-file.ts')
+  })
+
+  test('serializes empty reviewers', () => {
+    const result: ReviewResult = {
+      files: ['unknown.ts'],
+      totalFiles: 1,
+      skippedFiles: ['unknown.ts'],
+      inactiveThreshold: '6 months ago',
+      filteredCount: 0,
+      reviewers: [],
+    }
+    const parsed = validateJsonRoundTrip(result)
+    expect(parsed.reviewers).toHaveLength(0)
   })
 })

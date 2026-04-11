@@ -5,11 +5,12 @@ import consola from 'consola'
 import { version } from '../package.json'
 import { churn } from './commands/churn'
 import { onboarding } from './commands/onboarding'
+import { review } from './commands/review'
 import { whoKnows } from './commands/who-knows'
 import { why } from './commands/why'
 import { formatRelative } from './format'
 import { setGitCwd } from './git/run'
-import { renderChurn, renderOnboarding, renderWhoKnows, renderWhy } from './render'
+import { renderChurn, renderOnboarding, renderReview, renderWhoKnows, renderWhy } from './render'
 import { BlamewiseError, resolveTarget, sanitizeGitOption } from './utils/path'
 
 const cli = cac('blamewise')
@@ -148,6 +149,49 @@ cli.command('onboarding <path>', 'Generate a project knowledge map for onboardin
           result.staleThreshold,
         )
         await writeFile(outputPath, markdown, 'utf-8')
+      }
+    }
+    catch (e: any) {
+      handleCommandError(e)
+    }
+  })
+
+cli.command('review <file> [...files]', 'Recommend best reviewers for given files')
+  .option('-n, --num <number>', 'Number of reviewers to show', { default: 10 })
+  .option('--inactive-threshold <duration>', 'Filter out authors inactive since (e.g. "6 months ago")', { default: '6 months ago' })
+  .option('--json', 'Output as JSON')
+  .action(async (file: string, files: string[] | undefined, options: { num?: string, inactiveThreshold?: string, json?: boolean }) => {
+    try {
+      const allPaths = [file, ...(files ?? [])]
+
+      // Resolve all paths and verify they're in the same repo
+      let repoRoot: string | undefined
+      const resolved: string[] = []
+      for (const p of allPaths) {
+        const target = await resolveTarget(p)
+        if (repoRoot && target.repoRoot !== repoRoot) {
+          throw new BlamewiseError(
+            `All files must be in the same repository. Found different repos: ${repoRoot} and ${target.repoRoot}`,
+          )
+        }
+        repoRoot = target.repoRoot
+        resolved.push(target.pathspec)
+      }
+
+      setGitCwd(repoRoot)
+
+      if (options.inactiveThreshold)
+        sanitizeGitOption(options.inactiveThreshold, 'inactive-threshold')
+
+      const result = await review(resolved, {
+        num: Number.parseInt(String(options.num ?? '10'), 10),
+        inactiveThreshold: options.inactiveThreshold,
+      })
+      if (options.json) {
+        outputJson(result)
+      }
+      else {
+        consola.log(renderReview(result))
       }
     }
     catch (e: any) {

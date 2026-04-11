@@ -1,4 +1,5 @@
 import type { ActivityStats, StaleFile } from './commands/onboarding'
+import type { ReviewResult } from './commands/review'
 import type { FileChurnStats } from './scoring'
 import Table from 'cli-table3'
 import pc from 'picocolors'
@@ -188,5 +189,92 @@ export function renderWhy(
     out.push('')
   }
 
+  return out.join('\n')
+}
+
+const MINIMAL_TABLE_CHARS = {
+  'top': '',
+  'top-mid': '',
+  'top-left': '',
+  'top-right': '',
+  'bottom': '',
+  'bottom-mid': '',
+  'bottom-left': '',
+  'bottom-right': '',
+  'mid': '',
+  'left-mid': '',
+  'mid-mid': '',
+  'right-mid': '',
+  'left': ' ',
+  'right': ' ',
+  'middle': '  ',
+}
+
+export function renderReview(result: ReviewResult): string {
+  const out: string[] = []
+  const { files, totalFiles, skippedFiles, reviewers, inactiveThreshold, filteredCount } = result
+
+  out.push('')
+  if (totalFiles === 1) {
+    out.push(pc.bold(` Recommended reviewers for ${pc.cyan(files[0]!)}`))
+  }
+  else {
+    out.push(pc.bold(` Recommended reviewers for ${pc.cyan(`${totalFiles} file${totalFiles !== 1 ? 's' : ''}`)}`))
+  }
+  out.push('')
+
+  if (reviewers.length === 0) {
+    out.push(pc.dim('  No reviewers found.'))
+    out.push('')
+    return out.join('\n')
+  }
+
+  const table = new Table({
+    head: ['Rank', 'Reviewer', 'Email', 'Files', 'Lines', 'Commits', 'Last Active', 'Score'].map(h => pc.dim(h)),
+    colAligns: ['right', 'left', 'left', 'right', 'right', 'right', 'left', 'right'],
+    style: { 'padding-left': 1, 'padding-right': 1, 'head': [], 'border': [] },
+    chars: MINIMAL_TABLE_CHARS,
+  })
+
+  for (const [i, r] of reviewers.entries()) {
+    const rank = pc.bold(` ${i + 1}.`)
+    const reviewer = pc.cyan(r.name)
+    const filesCol = totalFiles > 1 ? pc.bold(`${r.filesExpertIn}/${totalFiles}`) : '-'
+    const lines = pc.green(String(r.totalLines))
+    const commits = String(r.totalCommits)
+    const lastActive = pc.dim(formatRelative(r.lastActive))
+    const scoreVal = r.score >= 0.7
+      ? pc.green(String(r.score))
+      : r.score >= 0.4
+        ? pc.yellow(String(r.score))
+        : pc.dim(String(r.score))
+
+    table.push([rank, reviewer, pc.dim(r.email), filesCol, lines, commits, lastActive, scoreVal])
+  }
+
+  out.push(table.toString())
+
+  // File details breakdown
+  if (totalFiles > 1) {
+    out.push('')
+    out.push(pc.dim(' File details:'))
+    for (const r of reviewers) {
+      const details = r.fileDetails
+        .map(d => `${d.filePath} (${d.score})`)
+        .join(', ')
+      out.push(`   ${pc.cyan(r.name)}: ${pc.dim(details)}`)
+    }
+  }
+
+  // Warnings
+  if (skippedFiles.length > 0) {
+    out.push('')
+    out.push(pc.dim(` Skipped ${skippedFiles.length} file${skippedFiles.length !== 1 ? 's' : ''} with no git history: ${skippedFiles.join(', ')}`))
+  }
+  if (filteredCount > 0) {
+    out.push(pc.dim(` Filtered out ${filteredCount} inactive author${filteredCount !== 1 ? 's' : ''} (no activity in ${inactiveThreshold})`))
+  }
+
+  out.push('')
   return out.join('\n')
 }

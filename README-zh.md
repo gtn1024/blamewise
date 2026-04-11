@@ -45,6 +45,17 @@ blamewise churn <path>
 blamewise churn src/ --since "6 months ago" -n 10
 ```
 
+### 谁应该 review 这些代码？
+
+为一个或多个文件推荐最佳代码审查人：
+
+```bash
+blamewise review <file> [files...]
+blamewise review src/auth/middleware.ts
+blamewise review $(git diff --name-only main...) -n 5
+blamewise review src/cli.ts src/render.ts --inactive-threshold "3 months ago"
+```
+
 ### 生成项目入职报告
 
 生成 Markdown 格式的项目知识地图——模块负责人、高频变更文件、过时文件和活动趋势：
@@ -74,9 +85,10 @@ blamewise who-knows /other/repo/src/main.ts
 
 | 参数 | 默认值 | 说明 |
 |------|--------|------|
-| `-n, --num` | 10 (who-knows) / 5 (why) / 20 (churn) | 显示结果数量 |
+| `-n, --num` | 10 (who-knows/review) / 5 (why) / 20 (churn) | 显示结果数量 |
 | `--since <date>` | — | 起始日期，如 "6 months ago"、"2025-01-01" |
 | `--until <date>` | — | 截止日期 |
+| `--inactive-threshold <duration>` | 6 months ago | 过滤不活跃作者（review 命令） |
 | `--output <file>` | ONBOARDING.md | onboarding 输出文件路径 |
 | `--stale-threshold <duration>` | 6 months ago | onboarding 过时文件阈值 |
 | `--json` | — | 以 JSON 格式输出（所有命令均支持） |

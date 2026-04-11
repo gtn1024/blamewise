@@ -42,6 +42,18 @@ jobs:
             os: ubuntu-latest
             artifact: blamewise-windows-x64
             ext: .exe
+          - target: bun-windows-arm64
+            os: ubuntu-latest
+            artifact: blamewise-windows-arm64
+            ext: .exe
+          - target: bun-linux-x64-musl
+            os: ubuntu-latest
+            artifact: blamewise-linux-x64-musl
+            ext: ''
+          - target: bun-linux-arm64-musl
+            os: ubuntu-latest
+            artifact: blamewise-linux-arm64-musl
+            ext: ''
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4

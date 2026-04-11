@@ -89,11 +89,11 @@ blamewise setup . --output checklist.md
 
 | Data | Sources |
 |------|---------|
-| Node.js version | `.nvmrc`, `.node-version`, `package.json` engines |
-| Package manager | `bun.lockb` / `bun.lock` / `pnpm-lock.yaml` / `yarn.lock` / `package-lock.json` |
-| Docker services | `docker-compose.yml` / `docker-compose.yaml` |
+| Language & version | `.nvmrc` / `.node-version` / `package.json` engines (JS), `.python-version` / `pyproject.toml` (Python), `go.mod` (Go), `rust-toolchain.toml` (Rust), `.sdkmanrc` / `.java-version` (Java), `.ruby-version` (Ruby), `.php-version` (PHP) |
+| Package manager | `bun.lockb` / `pnpm-lock.yaml` / `yarn.lock` / `package-lock.json` (JS), `poetry.lock` / `uv.lock` / `Pipfile.lock` (Python), lock files (Go/Rust/Ruby/PHP) |
+| Docker | `docker-compose.yml` / `docker-compose.yaml` / `Dockerfile` |
 | Required env vars | `.env.example` / `.env.sample` / `.env.template` |
-| Scripts (dev, build, test, lint, format, migrate) | `package.json` scripts |
+| Commands (dev, test, lint, format, build) | `Makefile` / `justfile` > language scripts (`package.json`, `pyproject.toml`) > convention (tool config files) |
 | Contributing guide | `CONTRIBUTING.md` |
 
 ### JSON output

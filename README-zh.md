@@ -89,11 +89,11 @@ blamewise setup . --output checklist.md
 
 | 数据 | 来源 |
 |------|------|
-| Node.js 版本 | `.nvmrc`、`.node-version`、`package.json` engines |
-| 包管理器 | `bun.lockb` / `bun.lock` / `pnpm-lock.yaml` / `yarn.lock` / `package-lock.json` |
-| Docker 服务 | `docker-compose.yml` / `docker-compose.yaml` |
+| 语言与版本 | `.nvmrc` / `.node-version` / `package.json` engines (JS)、`.python-version` / `pyproject.toml` (Python)、`go.mod` (Go)、`rust-toolchain.toml` (Rust)、`.sdkmanrc` / `.java-version` (Java)、`.ruby-version` (Ruby)、`.php-version` (PHP) |
+| 包管理器 | `bun.lockb` / `pnpm-lock.yaml` / `yarn.lock` / `package-lock.json` (JS)、`poetry.lock` / `uv.lock` / `Pipfile.lock` (Python)、各语言 lock 文件 |
+| Docker | `docker-compose.yml` / `docker-compose.yaml` / `Dockerfile` |
 | 必需的环境变量 | `.env.example` / `.env.sample` / `.env.template` |
-| 脚本（dev、build、test、lint、format、migrate） | `package.json` scripts |
+| 命令（dev、test、lint、format、build） | `Makefile` / `justfile` > 语言脚本（`package.json`、`pyproject.toml`）> 约定（工具配置文件） |
 | 贡献指南 | `CONTRIBUTING.md` |
 
 ### JSON 输出

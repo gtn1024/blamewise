@@ -7,6 +7,38 @@ export interface AuthorStats {
   score: number
 }
 
+export interface FileChurnStats {
+  filePath: string
+  commits: number
+  authorCount: number
+  churnScore: number
+}
+
+export function computeChurnScores(
+  entries: { filePath: string, commits: number, authors: Set<string> }[],
+): FileChurnStats[] {
+  if (entries.length === 0)
+    return []
+
+  const maxCommits = Math.max(...entries.map(e => e.commits), 1)
+  const maxAuthors = Math.max(...entries.map(e => e.authors.size), 1)
+
+  const results: FileChurnStats[] = entries.map((entry) => {
+    const normCommits = entry.commits / maxCommits
+    const normAuthors = entry.authors.size / maxAuthors
+    const churnScore = 0.6 * normCommits + 0.4 * normAuthors
+
+    return {
+      filePath: entry.filePath,
+      commits: entry.commits,
+      authorCount: entry.authors.size,
+      churnScore: Math.round(churnScore * 100) / 100,
+    }
+  })
+
+  return results.sort((a, b) => b.churnScore - a.churnScore)
+}
+
 export function computeScores(
   blameByAuthor: Map<string, { name: string, lines: number, lastActive: number }>,
   commitCountByAuthor: Map<string, number>,

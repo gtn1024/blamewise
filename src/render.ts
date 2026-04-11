@@ -1,6 +1,62 @@
+import type { FileChurnStats } from './scoring'
 import Table from 'cli-table3'
 import pc from 'picocolors'
 import { formatRelative } from './format'
+
+export function renderChurn(
+  path: string,
+  stats: FileChurnStats[],
+): string {
+  const out: string[] = []
+
+  out.push('')
+  out.push(
+    pc.bold(` Churn analysis for ${pc.cyan(path)}`)
+    + pc.dim(` (${stats.length} file${stats.length !== 1 ? 's' : ''})`),
+  )
+  out.push('')
+
+  const table = new Table({
+    head: ['File', 'Commits', 'Authors', 'Churn'].map(h => pc.dim(h)),
+    colAligns: ['left', 'right', 'right', 'right'],
+    style: { 'padding-left': 1, 'padding-right': 1, 'head': [], 'border': [] },
+    chars: {
+      'top': '',
+      'top-mid': '',
+      'top-left': '',
+      'top-right': '',
+      'bottom': '',
+      'bottom-mid': '',
+      'bottom-left': '',
+      'bottom-right': '',
+      'mid': '',
+      'left-mid': '',
+      'mid-mid': '',
+      'right-mid': '',
+      'left': ' ',
+      'right': ' ',
+      'middle': '  ',
+    },
+  })
+
+  for (const s of stats) {
+    const isHot = s.churnScore >= 0.7 && s.authorCount >= 3
+    const file = isHot ? pc.yellow(s.filePath) : pc.cyan(s.filePath)
+    const commits = String(s.commits)
+    const authors = String(s.authorCount)
+    const scoreVal = s.churnScore >= 0.7
+      ? pc.red(String(s.churnScore))
+      : s.churnScore >= 0.4
+        ? pc.yellow(String(s.churnScore))
+        : pc.green(String(s.churnScore))
+
+    table.push([file, commits, authors, scoreVal])
+  }
+
+  out.push(table.toString())
+  out.push('')
+  return out.join('\n')
+}
 
 export function renderWhoKnows(
   filePath: string,

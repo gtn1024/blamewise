@@ -36,11 +36,22 @@ blamewise why <path>
 blamewise why src/index.ts -n 10
 ```
 
+### Which files change the most?
+
+Identify files with the highest change frequency (commit count + author diversity):
+
+```bash
+blamewise churn <path>
+blamewise churn src/ --since "6 months ago" -n 10
+```
+
 ### Options
 
 | Flag | Default | Description |
 |------|---------|-------------|
-| `-n, --num` | 10 (who-knows) / 5 (why) | Number of results to show |
+| `-n, --num` | 10 (who-knows) / 5 (why) / 20 (churn) | Number of results to show |
+| `--since <date>` | — | Start date for churn (e.g. "6 months ago", "2025-01-01") |
+| `--until <date>` | — | End date for churn |
 
 ## Development
 

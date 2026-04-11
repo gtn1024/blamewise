@@ -36,11 +36,22 @@ blamewise why <path>
 blamewise why src/index.ts -n 10
 ```
 
+### 哪些文件改动最频繁？
+
+按变更频率和作者多样性找出热点文件：
+
+```bash
+blamewise churn <path>
+blamewise churn src/ --since "6 months ago" -n 10
+```
+
 ### 选项
 
 | 参数 | 默认值 | 说明 |
 |------|--------|------|
-| `-n, --num` | 10 (who-knows) / 5 (why) | 显示结果数量 |
+| `-n, --num` | 10 (who-knows) / 5 (why) / 20 (churn) | 显示结果数量 |
+| `--since <date>` | — | 起始日期，如 "6 months ago"、"2025-01-01" |
+| `--until <date>` | — | 截止日期 |
 
 ## 本地开发
 

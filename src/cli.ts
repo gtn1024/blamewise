@@ -1,4 +1,5 @@
 #!/usr/bin/env bun
+import { version } from '../package.json'
 import { cac } from 'cac'
 import consola from 'consola'
 import { churn } from './commands/churn'
@@ -46,7 +47,7 @@ cli.command('churn <path>', 'Show files with highest change frequency')
   })
 
 cli.help()
-cli.version('0.2.0')
+cli.version(version)
 
 cli.parse()
 if (!cli.args.length && !cli.matchedCommand) {

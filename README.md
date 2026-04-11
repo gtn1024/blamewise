@@ -1,5 +1,7 @@
 # blamewise
 
+> Blame smarter. Ramp up faster.
+
 [中文](./README-zh.md) | English
 
 A CLI tool that helps new team members understand code ownership and change history using local git data. Zero cloud dependencies, fully private.

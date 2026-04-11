@@ -42,7 +42,8 @@ export function parseBlamePorcelain(raw: string): BlameResult {
     if (SHA_RE.test(line)) {
       const parts = line.split(' ')
       const sha = parts[0]
-      if (!sha) continue
+      if (!sha)
+        continue
       currentSha = sha
       const finalLine = Number.parseInt(parts[2] ?? '', 10)
       lines.push({ sha: currentSha, finalLine })

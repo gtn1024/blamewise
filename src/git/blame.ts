@@ -41,8 +41,10 @@ export function parseBlamePorcelain(raw: string): BlameResult {
 
     if (SHA_RE.test(line)) {
       const parts = line.split(' ')
-      currentSha = parts[0]
-      const finalLine = Number.parseInt(parts[2], 10)
+      const sha = parts[0]
+      if (!sha) continue
+      currentSha = sha
+      const finalLine = Number.parseInt(parts[2] ?? '', 10)
       lines.push({ sha: currentSha, finalLine })
 
       if (!commits.has(currentSha)) {

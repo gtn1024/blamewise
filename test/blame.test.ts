@@ -24,8 +24,8 @@ describe('parseBlamePorcelain', () => {
     const { commits, lines } = parseBlamePorcelain(raw)
 
     expect(lines.length).toBe(1)
-    expect(lines[0].sha).toBe(SHA_A)
-    expect(lines[0].finalLine).toBe(1)
+    expect(lines[0]!.sha).toBe(SHA_A)
+    expect(lines[0]!.finalLine).toBe(1)
 
     expect(commits.size).toBe(1)
     const commit = commits.get(SHA_A)!

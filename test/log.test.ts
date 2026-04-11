@@ -8,7 +8,7 @@ describe('parseGitLog', () => {
     const entries = parseGitLog(raw)
 
     expect(entries.length).toBe(1)
-    expect(entries[0]).toEqual({
+    expect(entries[0]!).toEqual({
       sha: 'abc123',
       author: 'Alice',
       authorMail: 'alice@ex.com',
@@ -25,15 +25,15 @@ describe('parseGitLog', () => {
 
     const entries = parseGitLog(raw)
     expect(entries.length).toBe(2)
-    expect(entries[0].subject).toBe('feat: add X')
-    expect(entries[1].subject).toBe('fix: fix Y')
+    expect(entries[0]!.subject).toBe('feat: add X')
+    expect(entries[1]!.subject).toBe('fix: fix Y')
   })
 
   test('preserves pipe in subject', () => {
     const raw = 'sha1|Alice|alice@ex.com|2026-04-10T12:00:00+08:00|fix: handle A | B'
 
     const entries = parseGitLog(raw)
-    expect(entries[0].subject).toBe('fix: handle A | B')
+    expect(entries[0]!.subject).toBe('fix: handle A | B')
   })
 
   test('handles empty input', () => {

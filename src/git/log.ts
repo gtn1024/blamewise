@@ -13,10 +13,10 @@ export function parseGitLog(raw: string): LogEntry[] {
     .map((line) => {
       const parts = line.split('|')
       return {
-        sha: parts[0],
-        author: parts[1],
-        authorMail: parts[2],
-        date: parts[3],
+        sha: parts[0] ?? '',
+        author: parts[1] ?? '',
+        authorMail: parts[2] ?? '',
+        date: parts[3] ?? '',
         subject: parts.slice(4).join('|'),
       }
     })

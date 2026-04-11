@@ -11,9 +11,9 @@ describe('computeScores', () => {
     const results = computeScores(blame, commits)
 
     expect(results.length).toBe(1)
-    expect(results[0].score).toBe(1)
-    expect(results[0].lines).toBe(100)
-    expect(results[0].commits).toBe(5)
+    expect(results[0]!.score).toBe(1)
+    expect(results[0]!.lines).toBe(100)
+    expect(results[0]!.commits).toBe(5)
   })
 
   test('ranks by weighted score (lines > commits > recency)', () => {
@@ -31,8 +31,8 @@ describe('computeScores', () => {
     const results = computeScores(blame, commits)
 
     // Alice wins because lines carry 0.5 weight vs 0.3 for commits
-    expect(results[0].name).toBe('Alice')
-    expect(results[1].name).toBe('Bob')
+    expect(results[0]!.name).toBe('Alice')
+    expect(results[1]!.name).toBe('Bob')
   })
 
   test('merges authors from blame and commit data', () => {
@@ -68,7 +68,7 @@ describe('computeScores', () => {
     const results = computeScores(blame, commits)
 
     for (let i = 1; i < results.length; i++) {
-      expect(results[i - 1].score).toBeGreaterThanOrEqual(results[i].score)
+      expect(results[i - 1]!.score).toBeGreaterThanOrEqual(results[i]!.score)
     }
   })
 

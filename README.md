@@ -74,6 +74,26 @@ blamewise onboarding <path>
 blamewise onboarding . --output report.md --since "3 months ago"
 ```
 
+### Generate a setup checklist
+
+Scan a project and generate an onboarding checklist with prerequisites, installation steps, dev commands, and common tasks:
+
+```bash
+blamewise setup <path>
+blamewise setup . --output checklist.md
+```
+
+**Detected from:**
+
+| Data | Sources |
+|------|---------|
+| Node.js version | `.nvmrc`, `.node-version`, `package.json` engines |
+| Package manager | `bun.lockb` / `bun.lock` / `pnpm-lock.yaml` / `yarn.lock` / `package-lock.json` |
+| Docker services | `docker-compose.yml` / `docker-compose.yaml` |
+| Required env vars | `.env.example` / `.env.sample` / `.env.template` |
+| Scripts (dev, build, test, lint, format, migrate) | `package.json` scripts |
+| Contributing guide | `CONTRIBUTING.md` |
+
 ### JSON output
 
 All commands support `--json` for machine-readable output:
@@ -99,7 +119,7 @@ blamewise who-knows /other/repo/src/main.ts
 | `--since <date>` | — | Start date for churn/onboarding (e.g. "6 months ago", "2025-01-01") |
 | `--until <date>` | — | End date for churn |
 | `--inactive-threshold <duration>` | 6 months ago | Filter out authors inactive since (review command) |
-| `--output <file>` | ONBOARDING.md | Output file path for onboarding |
+| `--output <file>` | ONBOARDING.md (onboarding) / SETUP.md (setup) | Output file path |
 | `--stale-threshold <duration>` | 6 months ago | Stale file threshold for onboarding |
 | `--json` | — | Output as JSON (all commands) |
 

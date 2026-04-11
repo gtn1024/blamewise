@@ -74,6 +74,26 @@ blamewise onboarding <path>
 blamewise onboarding . --output report.md --since "3 months ago"
 ```
 
+### 生成项目配置清单
+
+扫描项目并生成入职配置清单，包含前置条件、安装步骤、开发命令和常用任务：
+
+```bash
+blamewise setup <path>
+blamewise setup . --output checklist.md
+```
+
+**检测来源：**
+
+| 数据 | 来源 |
+|------|------|
+| Node.js 版本 | `.nvmrc`、`.node-version`、`package.json` engines |
+| 包管理器 | `bun.lockb` / `bun.lock` / `pnpm-lock.yaml` / `yarn.lock` / `package-lock.json` |
+| Docker 服务 | `docker-compose.yml` / `docker-compose.yaml` |
+| 必需的环境变量 | `.env.example` / `.env.sample` / `.env.template` |
+| 脚本（dev、build、test、lint、format、migrate） | `package.json` scripts |
+| 贡献指南 | `CONTRIBUTING.md` |
+
 ### JSON 输出
 
 所有命令均支持 `--json` 以输出机器可读的 JSON 格式：
@@ -99,7 +119,7 @@ blamewise who-knows /other/repo/src/main.ts
 | `--since <date>` | — | 起始日期，如 "6 months ago"、"2025-01-01" |
 | `--until <date>` | — | 截止日期 |
 | `--inactive-threshold <duration>` | 6 months ago | 过滤不活跃作者（review 命令） |
-| `--output <file>` | ONBOARDING.md | onboarding 输出文件路径 |
+| `--output <file>` | ONBOARDING.md (onboarding) / SETUP.md (setup) | 输出文件路径 |
 | `--stale-threshold <duration>` | 6 months ago | onboarding 过时文件阈值 |
 | `--json` | — | 以 JSON 格式输出（所有命令均支持） |
 

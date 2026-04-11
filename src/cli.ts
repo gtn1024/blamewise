@@ -7,11 +7,12 @@ import { churn } from './commands/churn'
 import { explain } from './commands/explain'
 import { onboarding } from './commands/onboarding'
 import { review } from './commands/review'
+import { setup } from './commands/setup'
 import { whoKnows } from './commands/who-knows'
 import { why } from './commands/why'
 import { formatRelative } from './format'
 import { setGitCwd } from './git/run'
-import { renderChurn, renderExplain, renderOnboarding, renderReview, renderWhoKnows, renderWhy } from './render'
+import { renderChurn, renderExplain, renderOnboarding, renderReview, renderSetup, renderWhoKnows, renderWhy } from './render'
 import { BlamewiseError, resolveTarget, sanitizeGitOption } from './utils/path'
 
 const cli = cac('blamewise')
@@ -166,6 +167,32 @@ cli.command('onboarding <path>', 'Generate a project knowledge map for onboardin
           result.activity,
           result.staleThreshold,
         )
+        await writeFile(outputPath, markdown, 'utf-8')
+      }
+    }
+    catch (e: any) {
+      handleCommandError(e)
+    }
+  })
+
+cli.command('setup <path>', 'Generate a project setup checklist')
+  .option('--output <file>', 'Output file path', { default: 'SETUP.md' })
+  .option('--json', 'Output as JSON')
+  .action(async (path: string, options: { output?: string, json?: boolean }) => {
+    try {
+      const { repoRoot, pathspec } = await resolveTarget(path)
+      setGitCwd(repoRoot)
+      const result = await setup(pathspec, {
+        output: options.output,
+      })
+      if (options.json) {
+        outputJson(result)
+      }
+      else {
+        const outputRaw = options.output ?? 'SETUP.md'
+        const outputPath = isAbsolute(outputRaw) ? outputRaw : resolve(repoRoot, outputRaw)
+        const { writeFile } = await import('node:fs/promises')
+        const markdown = renderSetup(result)
         await writeFile(outputPath, markdown, 'utf-8')
       }
     }

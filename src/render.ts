@@ -17,8 +17,8 @@ export function renderWhoKnows(
   out.push('')
 
   const table = new Table({
-    head: ['Rank', 'Author', 'Lines', 'Commits', 'Last Active', 'Score'].map(h => pc.dim(h)),
-    colAligns: ['right', 'left', 'right', 'right', 'left', 'right'],
+    head: ['Rank', 'Author', 'Email', 'Lines', 'Commits', 'Last Active', 'Score'].map(h => pc.dim(h)),
+    colAligns: ['right', 'left', 'left', 'right', 'right', 'left', 'right'],
     style: { 'padding-left': 1, 'padding-right': 1, 'head': [], 'border': [] },
     chars: {
       'top': '',
@@ -47,7 +47,7 @@ export function renderWhoKnows(
     const lastActive = pc.dim(formatRelative(s.lastActive))
     const scoreVal = s.score >= 0.7 ? pc.green(String(s.score)) : s.score >= 0.4 ? pc.yellow(String(s.score)) : pc.dim(String(s.score))
 
-    table.push([rank, author, lines, commits, lastActive, scoreVal])
+    table.push([rank, author, pc.dim(s.email), lines, commits, lastActive, scoreVal])
   }
 
   out.push(table.toString())

@@ -29,6 +29,13 @@ test('hello world', () => {
 })
 ```
 
+## Checklist
+
+When adding new features (new commands, options, flags), also update:
+
+- `README.md` and `README-zh.md` — usage examples, options table
+- `--help` output in the CLI itself
+
 ## Release
 
 Push a `v*` tag to trigger the release workflow. It runs lint+test, builds binaries (linux/darwin/windows, x64/arm64) and an npm package, then publishes to GitHub Releases and npm.

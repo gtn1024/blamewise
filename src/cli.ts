@@ -4,13 +4,14 @@ import { cac } from 'cac'
 import consola from 'consola'
 import { version } from '../package.json'
 import { churn } from './commands/churn'
+import { explain } from './commands/explain'
 import { onboarding } from './commands/onboarding'
 import { review } from './commands/review'
 import { whoKnows } from './commands/who-knows'
 import { why } from './commands/why'
 import { formatRelative } from './format'
 import { setGitCwd } from './git/run'
-import { renderChurn, renderOnboarding, renderReview, renderWhoKnows, renderWhy } from './render'
+import { renderChurn, renderExplain, renderOnboarding, renderReview, renderWhoKnows, renderWhy } from './render'
 import { BlamewiseError, resolveTarget, sanitizeGitOption } from './utils/path'
 
 const cli = cac('blamewise')
@@ -75,6 +76,23 @@ cli.command('why <path>', 'Show recent commits with reasons for changes').option
       else {
         consola.log(renderWhy(result.filePath, result.commits))
       }
+    }
+  }
+  catch (e: any) {
+    handleCommandError(e)
+  }
+})
+
+cli.command('explain <path>', 'Summarize a file from git history').option('--json', 'Output as JSON').action(async (path: string, options: { json?: boolean }) => {
+  try {
+    const { repoRoot, pathspec } = await resolveTarget(path)
+    setGitCwd(repoRoot)
+    const result = await explain(pathspec)
+    if (options.json) {
+      outputJson(result)
+    }
+    else {
+      consola.log(renderExplain(result))
     }
   }
   catch (e: any) {

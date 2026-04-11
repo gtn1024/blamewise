@@ -36,6 +36,15 @@ blamewise why <path>
 blamewise why src/index.ts -n 10
 ```
 
+### 解释这个文件
+
+从 git 历史中总结一个文件——创建时间、活跃状态、关键里程碑和贡献者：
+
+```bash
+blamewise explain <path>
+blamewise explain src/index.ts
+```
+
 ### 哪些文件改动最频繁？
 
 按变更频率和作者多样性找出热点文件：
@@ -71,6 +80,7 @@ blamewise onboarding . --output report.md --since "3 months ago"
 
 ```bash
 blamewise who-knows src/index.ts --json
+blamewise explain src/index.ts --json
 blamewise churn src/ --json | jq '.files[] | select(.churnScore > 0.7)'
 ```
 

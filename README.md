@@ -36,6 +36,15 @@ blamewise why <path>
 blamewise why src/index.ts -n 10
 ```
 
+### Explain this file
+
+Summarize a file's history — when it was created, activity status, key milestones, and contributors:
+
+```bash
+blamewise explain <path>
+blamewise explain src/index.ts
+```
+
 ### Which files change the most?
 
 Identify files with the highest change frequency (commit count + author diversity):
@@ -71,6 +80,7 @@ All commands support `--json` for machine-readable output:
 
 ```bash
 blamewise who-knows src/index.ts --json
+blamewise explain src/index.ts --json
 blamewise churn src/ --json | jq '.files[] | select(.churnScore > 0.7)'
 ```
 

@@ -1,12 +1,20 @@
 # blamewise
 
+[中文](./README-zh.md) | English
+
 A CLI tool that helps new team members understand code ownership and change history using local git data. Zero cloud dependencies, fully private.
 
 ## Install
 
+**npm:**
+
 ```bash
-bun install
+npm install -g blamewise
 ```
+
+**Binary:**
+
+Download the binary for your platform from [GitHub Releases](https://github.com/gtn1024/blamewise/releases).
 
 ## Usage
 
@@ -15,8 +23,8 @@ bun install
 Rank authors by expertise on a file (lines owned + commit frequency + recency):
 
 ```bash
-bun run src/cli.ts who-knows <path>
-bun run src/cli.ts who-knows src/index.ts -n 5
+blamewise who-knows <path>
+blamewise who-knows src/index.ts -n 5
 ```
 
 ### Why did this file change?
@@ -24,8 +32,8 @@ bun run src/cli.ts who-knows src/index.ts -n 5
 Show recent commits with reasons for changes:
 
 ```bash
-bun run src/cli.ts why <path>
-bun run src/cli.ts why src/index.ts -n 10
+blamewise why <path>
+blamewise why src/index.ts -n 10
 ```
 
 ### Options
@@ -37,6 +45,13 @@ bun run src/cli.ts why src/index.ts -n 10
 ## Development
 
 ```bash
-bun run src/cli.ts --help
+git clone https://github.com/gtn1024/blamewise.git
+cd blamewise
+bun install
 bun test
+bun run src/cli.ts --help
 ```
+
+## License
+
+[MIT](./LICENSE)

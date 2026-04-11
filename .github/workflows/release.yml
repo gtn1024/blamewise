@@ -2,11 +2,20 @@ name: Release
 
 on:
   push:
-    tags:
-      - 'v*'
+    tags: ['v*']
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile
+      - run: bunx eslint .
+      - run: bun test
+
   build-binaries:
+    needs: test
     strategy:
       matrix:
         include:
@@ -33,43 +42,28 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-
       - uses: oven-sh/setup-bun@v2
-
       - run: bun install --frozen-lockfile
-
-      - run: npx eslint . && bun test
-
       - run: bun build --compile --target ${{ matrix.target }} src/cli.ts --outfile dist/${{ matrix.artifact }}${{ matrix.ext }}
-
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact }}
           path: dist/${{ matrix.artifact }}${{ matrix.ext }}
 
   build-npm-package:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: oven-sh/setup-bun@v2
-
       - run: bun install --frozen-lockfile
-
       - run: bun build src/cli.ts --outfile dist/blamewise.js --target node
-
-      - run: sed -i '1s|.*|#!/usr/bin/env node|' dist/blamewise.js
-
+      - name: Add shebang
+        run: sed -i '1s|.*|#!/usr/bin/env node|' dist/blamewise.js
       - uses: actions/upload-artifact@v4
         with:
           name: npm-package
-          path: |
-            dist/blamewise.js
-            package.json
+          path: dist/blamewise.js
 
   release:
     needs: [build-binaries, build-npm-package]
@@ -100,7 +94,6 @@ jobs:
         run: |
           mkdir -p dist
           cp artifacts/dist/blamewise.js dist/blamewise.js
-          cp artifacts/package.json package.json
           npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

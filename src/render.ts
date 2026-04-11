@@ -1,9 +1,64 @@
+import type { ExplainResult } from './commands/explain'
 import type { ActivityStats, StaleFile } from './commands/onboarding'
 import type { ReviewResult } from './commands/review'
 import type { FileChurnStats } from './scoring'
 import Table from 'cli-table3'
 import pc from 'picocolors'
 import { formatRelative } from './format'
+
+export function renderExplain(result: ExplainResult): string {
+  const out: string[] = []
+  const { filePath, created, lastChanged, status, totalCommits, currentLines, contributors, milestones } = result
+
+  out.push('')
+  out.push(pc.bold(` ${pc.cyan(filePath)}`))
+  out.push('')
+
+  // Creation
+  out.push(` Created: ${pc.dim(created.date.slice(0, 10))} by ${pc.cyan(created.author)}`)
+  out.push(`   ${pc.dim(`"${created.subject}"`)}`)
+  out.push('')
+
+  // Status
+  const statusLabel
+    = status === 'active'
+      ? pc.green('Active')
+      : status === 'stable'
+        ? pc.yellow('Stable')
+        : pc.dim('Stale')
+  out.push(` Status: ${statusLabel} (last changed ${lastChanged.relative})`)
+  out.push('')
+
+  // Summary line
+  const activeCount = contributors.filter(c => c.active).length
+  out.push(
+    pc.dim(` Commits: ${totalCommits}  |  Lines: ${currentLines}  |  Contributors: ${contributors.length} (${activeCount} active)`),
+  )
+  out.push('')
+
+  // Key milestones
+  if (milestones.length > 0) {
+    out.push(pc.bold(' Key milestones:'))
+    for (const m of milestones) {
+      const statStr = `(+${m.added} -${m.removed})`
+      const marker = m.isRefactor ? pc.yellow(' [refactor]') : ''
+      out.push(`   ${pc.dim(m.date)}  ${pc.cyan(m.author.padEnd(10))} ${pc.dim(`"${m.subject}"`)}  ${pc.dim(statStr)}${marker}`)
+    }
+    out.push('')
+  }
+
+  // Contributors
+  if (contributors.length > 0) {
+    out.push(pc.bold(' Contributors:'))
+    for (const c of contributors) {
+      const activeLabel = c.active ? pc.green('active') : pc.dim('inactive')
+      out.push(`   ${pc.cyan(c.name)} ${pc.dim(`<${c.email}>`)} — ${c.commits} commit${c.commits !== 1 ? 's' : ''} (${activeLabel})`)
+    }
+    out.push('')
+  }
+
+  return out.join('\n')
+}
 
 export function renderChurn(
   path: string,

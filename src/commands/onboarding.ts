@@ -2,6 +2,7 @@ import type { FileChurnStats } from '../scoring'
 import { parseChurnLog } from '../git/churn'
 import { getGitCwd, git } from '../git/run'
 import { computeChurnScores } from '../scoring'
+import { getThresholdTimestamp } from '../utils/time'
 
 export interface OnboardingOptions {
   output?: string
@@ -155,14 +156,6 @@ async function getStaleFiles(dir: string, threshold: string): Promise<StaleFile[
   }
 
   return stale.sort((a, b) => a.lastDate.localeCompare(b.lastDate))
-}
-
-async function getThresholdTimestamp(threshold: string): Promise<number> {
-  // Use git to resolve the threshold date
-  const raw = await git('log', '-1', `--before=${threshold}`, '--format=%at')
-  if (!raw.trim())
-    return Math.floor(Date.now() / 1000) - 6 * 30 * 86400 // fallback: 6 months ago
-  return Number.parseInt(raw.trim(), 10)
 }
 
 async function getActivityStats(dir: string): Promise<ActivityStats> {

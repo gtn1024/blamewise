@@ -54,6 +54,13 @@ blamewise onboarding <path>
 blamewise onboarding . --output report.md --since "3 months ago"
 ```
 
+`<path>` 可以是相对路径、绝对路径，甚至可以是其他 git 仓库中的路径——blamewise 会自动检测仓库根目录。
+
+```bash
+blamewise who-knows src/index.ts -n 5
+blamewise who-knows /other/repo/src/main.ts
+```
+
 ### 选项
 
 | 参数 | 默认值 | 说明 |

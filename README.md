@@ -54,6 +54,13 @@ blamewise onboarding <path>
 blamewise onboarding . --output report.md --since "3 months ago"
 ```
 
+`<path>` can be a relative path, an absolute path, or even a path into a different git repository — blamewise automatically detects the repo root.
+
+```bash
+blamewise who-knows src/index.ts -n 5
+blamewise who-knows /other/repo/src/main.ts
+```
+
 ### Options
 
 | Flag | Default | Description |

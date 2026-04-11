@@ -3,8 +3,21 @@ import { promisify } from 'node:util'
 
 const execFileAsync = promisify(execFile)
 
+let _cwd: string | undefined
+
+export function setGitCwd(cwd: string | undefined): void {
+  _cwd = cwd
+}
+
+export function getGitCwd(): string {
+  return _cwd ?? process.cwd()
+}
+
 export async function git(...args: string[]): Promise<string> {
-  const { stdout } = await execFileAsync('git', args)
+  const options: { cwd?: string } = {}
+  if (_cwd)
+    options.cwd = _cwd
+  const { stdout } = await execFileAsync('git', args, options)
   return stdout
 }
 

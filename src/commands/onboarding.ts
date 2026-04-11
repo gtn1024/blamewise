@@ -1,6 +1,6 @@
 import { writeFile } from 'node:fs/promises'
 import { parseChurnLog } from '../git/churn'
-import { git } from '../git/run'
+import { getGitCwd, git } from '../git/run'
 import { renderOnboarding } from '../render'
 import { computeChurnScores } from '../scoring'
 
@@ -226,7 +226,7 @@ export async function onboarding(dir: string, options?: OnboardingOptions) {
   const activity = await getActivityStats(dir)
 
   // 5. Generate Markdown
-  const projectName = dir === '.' ? (process.cwd().split('/').pop() ?? 'project') : dir
+  const projectName = dir === '.' ? (getGitCwd().split('/').pop() ?? 'project') : dir
   const markdown = renderOnboarding(projectName!, moduleOwners, churnStats, staleFiles, activity, staleThreshold)
 
   // 6. Write to file

@@ -1,8 +1,9 @@
 #!/usr/bin/env bun
-import { version } from '../package.json'
 import { cac } from 'cac'
 import consola from 'consola'
+import { version } from '../package.json'
 import { churn } from './commands/churn'
+import { onboarding } from './commands/onboarding'
 import { whoKnows } from './commands/who-knows'
 import { why } from './commands/why'
 
@@ -38,6 +39,24 @@ cli.command('churn <path>', 'Show files with highest change frequency')
         num: Number.parseInt(String(options.num ?? '20'), 10),
         since: options.since,
         until: options.until,
+      })
+    }
+    catch (e: any) {
+      consola.error(e)
+      process.exit(1)
+    }
+  })
+
+cli.command('onboarding <path>', 'Generate a project knowledge map for onboarding')
+  .option('--output <file>', 'Output file path', { default: 'ONBOARDING.md' })
+  .option('--since <date>', 'Date filter for churn/activity (e.g. "30 days ago")')
+  .option('--stale-threshold <duration>', 'Stale file threshold (e.g. "6 months ago")', { default: '6 months ago' })
+  .action(async (path: string, options: { output?: string, since?: string, staleThreshold?: string }) => {
+    try {
+      await onboarding(path, {
+        output: options.output,
+        since: options.since,
+        staleThreshold: options.staleThreshold,
       })
     }
     catch (e: any) {

@@ -54,6 +54,15 @@ blamewise onboarding <path>
 blamewise onboarding . --output report.md --since "3 months ago"
 ```
 
+### JSON output
+
+All commands support `--json` for machine-readable output:
+
+```bash
+blamewise who-knows src/index.ts --json
+blamewise churn src/ --json | jq '.files[] | select(.churnScore > 0.7)'
+```
+
 `<path>` can be a relative path, an absolute path, or even a path into a different git repository — blamewise automatically detects the repo root.
 
 ```bash
@@ -70,6 +79,7 @@ blamewise who-knows /other/repo/src/main.ts
 | `--until <date>` | — | End date for churn |
 | `--output <file>` | ONBOARDING.md | Output file path for onboarding |
 | `--stale-threshold <duration>` | 6 months ago | Stale file threshold for onboarding |
+| `--json` | — | Output as JSON (all commands) |
 
 ## Development
 

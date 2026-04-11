@@ -1,10 +1,14 @@
-import { consola } from 'consola'
 import { parseBlamePorcelain } from '../git/blame'
 import { git } from '../git/run'
-import { renderWhoKnows } from '../render'
 import { computeScores } from '../scoring'
 
-export async function whoKnows(filePath: string, options?: { num?: number }) {
+export interface WhoKnowsResult {
+  filePath: string
+  totalLines: number
+  authors: ReturnType<typeof computeScores>
+}
+
+export async function whoKnows(filePath: string, options?: { num?: number }): Promise<WhoKnowsResult> {
   const num = options?.num ?? 10
 
   const raw = await git('blame', '--porcelain', '--', filePath)
@@ -44,6 +48,6 @@ export async function whoKnows(filePath: string, options?: { num?: number }) {
     // If git log fails, just use blame data
   }
 
-  const stats = computeScores(byAuthor, commitCounts).slice(0, num)
-  consola.log(renderWhoKnows(filePath, lines.length, stats))
+  const authors = computeScores(byAuthor, commitCounts).slice(0, num)
+  return { filePath, totalLines: lines.length, authors }
 }

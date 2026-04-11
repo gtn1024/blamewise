@@ -35,6 +35,7 @@ When adding new features (new commands, options, flags), also update:
 
 - `README.md` and `README-zh.md` — usage examples, options table
 - `--help` output in the CLI itself
+- All commands must support `--json` for machine-readable output. Command functions should return structured data; the CLI layer handles JSON vs text rendering.
 
 ## Release
 

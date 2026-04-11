@@ -1,13 +1,13 @@
-import { writeFile } from 'node:fs/promises'
+import type { FileChurnStats } from '../scoring'
 import { parseChurnLog } from '../git/churn'
 import { getGitCwd, git } from '../git/run'
-import { renderOnboarding } from '../render'
 import { computeChurnScores } from '../scoring'
 
 export interface OnboardingOptions {
   output?: string
   since?: string
   staleThreshold?: string
+  json?: boolean
 }
 
 interface ModuleOwner {
@@ -195,8 +195,16 @@ async function getActivityStats(dir: string): Promise<ActivityStats> {
   }
 }
 
-export async function onboarding(dir: string, options?: OnboardingOptions) {
-  const outputPath = options?.output ?? 'ONBOARDING.md'
+export interface OnboardingResult {
+  projectName: string
+  moduleOwners: ModuleOwner[]
+  highChurnFiles: FileChurnStats[]
+  staleFiles: StaleFile[]
+  activity: ActivityStats
+  staleThreshold: string
+}
+
+export async function onboarding(dir: string, options?: OnboardingOptions): Promise<OnboardingResult> {
   const since = options?.since ?? '30 days ago'
   const staleThreshold = options?.staleThreshold ?? '6 months ago'
 
@@ -217,7 +225,7 @@ export async function onboarding(dir: string, options?: OnboardingOptions) {
   ]
   const churnRaw = await git(...churnArgs)
   const churnEntries = parseChurnLog(churnRaw)
-  const churnStats = computeChurnScores(churnEntries).slice(0, 10)
+  const highChurnFiles = computeChurnScores(churnEntries).slice(0, 10)
 
   // 3. Stale Files
   const staleFiles = (await getStaleFiles(dir, staleThreshold)).slice(0, 10)
@@ -225,10 +233,7 @@ export async function onboarding(dir: string, options?: OnboardingOptions) {
   // 4. Activity Trend
   const activity = await getActivityStats(dir)
 
-  // 5. Generate Markdown
   const projectName = dir === '.' ? (getGitCwd().split('/').pop() ?? 'project') : dir
-  const markdown = renderOnboarding(projectName!, moduleOwners, churnStats, staleFiles, activity, staleThreshold)
 
-  // 6. Write to file
-  await writeFile(outputPath, markdown, 'utf-8')
+  return { projectName: projectName!, moduleOwners, highChurnFiles, staleFiles, activity, staleThreshold }
 }

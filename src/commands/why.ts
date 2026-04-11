@@ -1,9 +1,12 @@
-import { consola } from 'consola'
 import { parseGitLog } from '../git/log'
 import { git } from '../git/run'
-import { renderWhy } from '../render'
 
-export async function why(filePath: string, options?: { num?: number }) {
+export interface WhyResult {
+  filePath: string
+  commits: ReturnType<typeof parseGitLog>
+}
+
+export async function why(filePath: string, options?: { num?: number }): Promise<WhyResult> {
   const num = options?.num ?? 5
 
   const raw = await git(
@@ -16,10 +19,9 @@ export async function why(filePath: string, options?: { num?: number }) {
   )
 
   if (!raw.trim()) {
-    consola.log(`No commits found for ${filePath}`)
-    return
+    return { filePath, commits: [] }
   }
 
-  const entries = parseGitLog(raw)
-  consola.log(renderWhy(filePath, entries))
+  const commits = parseGitLog(raw)
+  return { filePath, commits }
 }

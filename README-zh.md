@@ -54,6 +54,15 @@ blamewise onboarding <path>
 blamewise onboarding . --output report.md --since "3 months ago"
 ```
 
+### JSON 输出
+
+所有命令均支持 `--json` 以输出机器可读的 JSON 格式：
+
+```bash
+blamewise who-knows src/index.ts --json
+blamewise churn src/ --json | jq '.files[] | select(.churnScore > 0.7)'
+```
+
 `<path>` 可以是相对路径、绝对路径，甚至可以是其他 git 仓库中的路径——blamewise 会自动检测仓库根目录。
 
 ```bash
@@ -70,6 +79,7 @@ blamewise who-knows /other/repo/src/main.ts
 | `--until <date>` | — | 截止日期 |
 | `--output <file>` | ONBOARDING.md | onboarding 输出文件路径 |
 | `--stale-threshold <duration>` | 6 months ago | onboarding 过时文件阈值 |
+| `--json` | — | 以 JSON 格式输出（所有命令均支持） |
 
 ## 本地开发
 

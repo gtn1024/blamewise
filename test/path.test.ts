@@ -1,5 +1,5 @@
 import { execSync } from 'node:child_process'
-import { mkdirSync, realpathSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdirSync, realpathSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { resolve } from 'node:path'
 import { afterEach, beforeEach, describe, expect, test } from 'bun:test'
@@ -7,6 +7,14 @@ import { BlamewiseError, resolveTarget, sanitizeGitOption } from '../src/utils/p
 
 const TMP = realpathSync(tmpdir())
 const testRepo = resolve(TMP, `blamewise-test-${Date.now()}-${Math.random().toString(36).slice(2)}`)
+
+function initGitRepo(dir: string) {
+  execSync('git init', { cwd: dir, stdio: 'pipe' })
+  execSync('git config user.email test@test.com', { cwd: dir, stdio: 'pipe' })
+  execSync('git config user.name Test', { cwd: dir, stdio: 'pipe' })
+  execSync('git add -A', { cwd: dir, stdio: 'pipe' })
+  execSync('git commit -m init', { cwd: dir, stdio: 'pipe' })
+}
 
 beforeEach(() => {
   rmSync(testRepo, { recursive: true, force: true })
@@ -33,8 +41,7 @@ describe('resolveTarget', () => {
     const repoDir = resolve(testRepo, 'my-repo')
     mkdirSync(repoDir, { recursive: true })
     writeFileSync(resolve(repoDir, 'hello.txt'), 'world')
-    execSync('git init', { cwd: repoDir })
-    execSync('git add -A && git commit -m init', { cwd: repoDir })
+    initGitRepo(repoDir)
 
     const { repoRoot, pathspec } = await resolveTarget(repoDir)
     expect(repoRoot).toBe(repoDir)
@@ -46,8 +53,7 @@ describe('resolveTarget', () => {
     mkdirSync(repoDir, { recursive: true })
     mkdirSync(resolve(repoDir, 'src'), { recursive: true })
     writeFileSync(resolve(repoDir, 'src', 'main.ts'), 'console.log(1)')
-    execSync('git init', { cwd: repoDir })
-    execSync('git add -A && git commit -m init', { cwd: repoDir })
+    initGitRepo(repoDir)
 
     const { repoRoot, pathspec } = await resolveTarget(resolve(repoDir, 'src', 'main.ts'))
     expect(repoRoot).toBe(repoDir)
@@ -68,13 +74,12 @@ describe('resolveTarget', () => {
     const repoDir = resolve(testRepo, 'my-repo')
     mkdirSync(repoDir, { recursive: true })
     writeFileSync(resolve(repoDir, 'a.txt'), 'hello')
-    execSync('git init', { cwd: repoDir })
-    execSync('git add -A && git commit -m init', { cwd: repoDir })
+    initGitRepo(repoDir)
 
     // Create a symlink inside the repo pointing outside
     const linkPath = resolve(repoDir, 'escape')
     try {
-      execSync(`ln -s /etc "${linkPath}"`)
+      symlinkSync('/etc', linkPath, 'dir')
     }
     catch {
       // Skip on platforms where symlink creation fails

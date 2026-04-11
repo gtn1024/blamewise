@@ -45,13 +45,24 @@ blamewise churn <path>
 blamewise churn src/ --since "6 months ago" -n 10
 ```
 
+### Generate an onboarding report
+
+Create a Markdown knowledge map for a project — module owners, high-churn files, stale files, and activity trends:
+
+```bash
+blamewise onboarding <path>
+blamewise onboarding . --output report.md --since "3 months ago"
+```
+
 ### Options
 
 | Flag | Default | Description |
 |------|---------|-------------|
 | `-n, --num` | 10 (who-knows) / 5 (why) / 20 (churn) | Number of results to show |
-| `--since <date>` | — | Start date for churn (e.g. "6 months ago", "2025-01-01") |
+| `--since <date>` | — | Start date for churn/onboarding (e.g. "6 months ago", "2025-01-01") |
 | `--until <date>` | — | End date for churn |
+| `--output <file>` | ONBOARDING.md | Output file path for onboarding |
+| `--stale-threshold <duration>` | 6 months ago | Stale file threshold for onboarding |
 
 ## Development
 

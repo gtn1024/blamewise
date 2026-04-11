@@ -45,6 +45,15 @@ blamewise churn <path>
 blamewise churn src/ --since "6 months ago" -n 10
 ```
 
+### 生成项目入职报告
+
+生成 Markdown 格式的项目知识地图——模块负责人、高频变更文件、过时文件和活动趋势：
+
+```bash
+blamewise onboarding <path>
+blamewise onboarding . --output report.md --since "3 months ago"
+```
+
 ### 选项
 
 | 参数 | 默认值 | 说明 |
@@ -52,6 +61,8 @@ blamewise churn src/ --since "6 months ago" -n 10
 | `-n, --num` | 10 (who-knows) / 5 (why) / 20 (churn) | 显示结果数量 |
 | `--since <date>` | — | 起始日期，如 "6 months ago"、"2025-01-01" |
 | `--until <date>` | — | 截止日期 |
+| `--output <file>` | ONBOARDING.md | onboarding 输出文件路径 |
+| `--stale-threshold <duration>` | 6 months ago | onboarding 过时文件阈值 |
 
 ## 本地开发
 
